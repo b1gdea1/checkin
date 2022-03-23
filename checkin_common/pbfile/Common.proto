@@ -1,0 +1,65 @@
+syntax = "proto3";
+import "Question.proto";
+package proto;
+option go_package = "github.com/b1gdea1/checkin_common/common_service";
+//每个远程方法使用不同的消息类型的话要设计的消息类型很多，但是方便扩展，不然每次都会影响现有的代码
+
+//登录相关
+enum LoginResult{
+  LOGIN_SUCCESS = 0;
+  LOGIN_WRONG_PASSWORD = 1;
+  FAIL_TO_UPLOAD_TOKEN=2;
+}
+message LoginRequest{
+  int32 Type = 1;//区分两种身份，0学生，1管理员
+  string UserID = 2;
+  string Password = 3;
+}
+message LoginResponse{
+  LoginResult state = 1;
+  string token = 2;//只是一个随机数
+}
+
+//注册相关
+enum RegisterResult{
+  REGISTER_SUCCESS = 0;
+  REGISTER_FAIL = 1;
+  ALREADY_HAVE_SCHOOL_ID = 2;
+  ILLEGAL_SCHOOL_ID = 3;
+  ILLEGAL_PASSWORD = 4;
+  ADMIN_DOSE_NOT_EXIST=5;
+  ADMIN_DOSE_NOT_LOGIN=6;
+}
+message RegisterRequest{
+  int32 Type = 1;//区分两种身份，0学生，1管理员
+  string UserID = 2;
+  string Password = 3;
+  string AdminID = 4;//只有管理员能注册用户
+  string AdminToken=5;
+}
+message RegisterResponse{
+  RegisterResult result = 1;
+}
+
+//打卡相关
+enum CheckinResult{
+  CHECKIN_SUCCESS = 0;
+  CHECKIN_FAILED = 1;
+}
+
+message CheckinRequest{
+  string UserID = 1;
+  string Token = 2;
+  string Answers = 3;
+}
+message CheckinResponse{
+  string UserID = 1;
+  string Token = 2;//更新token
+  CheckinResult result = 3;
+}
+service StudentService{
+  rpc LoginRPC(LoginRequest)returns (LoginResponse){}
+  rpc GetQuestions(QuestionRequest)returns(QuestionDetail);
+  rpc RegisterUser(RegisterRequest)returns(RegisterResponse);
+  rpc Checkin(CheckinRequest)returns(CheckinResponse);
+}

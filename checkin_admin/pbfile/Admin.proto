@@ -1,0 +1,49 @@
+syntax = "proto3";
+import "Question.proto";
+package proto;
+option go_package = "github.com/b1gdea1/checkin_admin/admin_service";
+//每个远程方法使用不同的消息类型的话要设计的消息类型很多，但是方便扩展，不然每次都会影响现有的代码
+
+
+//更新问题
+enum QuestionUpdateResult{
+  QUESTION_UPDATE_SUCCESS = 0;
+  QUESTION_UPDATE_NO_LOGIN = 1;
+  QUESTION_UPDATE_NO_ADMIN=2;
+  QUESTION_UPDATE_ILLEGAL=3;
+  QUESTION_UPDATE_TOKEN_FAIL=4;
+}
+
+message QuestionUpdateRequest{
+  string admin_id=1;
+  string token = 2;
+  repeated Question questions = 3;
+}
+message QuestionUpdateResponse{
+  string token = 1;
+  QuestionUpdateResult result = 2;
+}
+
+//发布通知
+enum NoticeResult{
+  NOTICE_SEND_SUCCESS = 0;
+  NOTICE_USER_DOSE_NOT_EXIST = 1;
+  NOTICE_ADMIN_DOSE_NOT_EXIST = 2;
+  NOTICE_ADMIN_DOST_NOT_LOGIN = 3;
+  NOTICE_SEND_FAIL=4;
+}
+message NoticeRequest{
+  string UserID = 1;
+  string Msg = 2;
+  string AdminID = 3;
+  string AdminToken = 4;
+  int32 TTL = 5;
+}
+message NoticeResp{
+  NoticeResult Result = 1;
+}
+
+service AdminService{
+  rpc PublishNotice(NoticeRequest)returns (NoticeResp);
+  rpc UpdateQuestions(QuestionUpdateRequest)returns(QuestionUpdateResponse);
+}

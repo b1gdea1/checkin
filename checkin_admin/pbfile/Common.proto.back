@@ -1,0 +1,35 @@
+//syntax = "proto3";
+//package proto;
+//option go_package = "github.com/b1gdea1/checkin_user_service/common";
+////每个远程方法使用不同的消息类型的话要设计的消息类型很多，但是方便扩展，不然每次都会影响现有的代码
+//
+//enum QuestionType{
+//  NORMAL_QUESTION = 0;
+//  SINGLE_SELECTION = 1;
+//  MULTI_SELECTION = 2;
+//}
+//message Question{
+//  QuestionType type = 1;
+//  string content = 2;
+//  repeated string answers = 3;
+//  repeated string depends = 4;
+//}
+//message QuestionRequest{
+//}
+//message QuestionDetail{
+//  repeated Question questions = 2;
+//}
+//
+//enum LoginResult{
+//  LOGIN_SUCCESS = 0;
+//  LOGIN_WRONG_PASSWORD = 1;
+//}
+//message LoginRequest{
+//  string UserID = 1;
+//  string Password = 2;
+//}
+//message LoginResponse{
+//  LoginResult state = 1;
+//  string token = 2;
+//}
+//
